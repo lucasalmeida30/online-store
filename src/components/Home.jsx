@@ -19,7 +19,6 @@ class Home extends Component {
     event.preventDefault();
     const { search } = this.state;
     const products = await getProductsFromCategoryAndQuery(null, search);
-    console.log(products.results);
     this.setState(({
       products: products.results,
       search: '',
