@@ -1,17 +1,18 @@
-import React from 'react';
+import React, { Component } from 'react';
+import { Route, Switch } from 'react-router-dom';
 import './App.css';
+import Cart from './components/Cart';
+import Home from './components/Home';
 
-function App() {
-  return (
-    <div className="App">
-      <input type="text" />
-      <h3
-        data-testid="home-initial-message"
-      >
-        Digite algum termo de pesquisa ou escolha uma categoria.
-      </h3>
-    </div>
-  );
+class App extends Component {
+  render() {
+    return (
+      <Switch>
+        <Route exact path="/" component={ Home } />
+        <Route exact path="/cart" component={ Cart } />
+      </Switch>
+    );
+  }
 }
 
 export default App;
