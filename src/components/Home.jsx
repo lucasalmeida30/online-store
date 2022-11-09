@@ -1,16 +1,53 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { getProductsFromCategoryAndQuery } from '../services/api';
 
 class Home extends Component {
+  state = {
+    search: '',
+    products: [],
+  };
+
+  handleChange = ({ target }) => {
+    const { value } = target;
+    this.setState(({
+      search: value,
+    }));
+  };
+
+  searchProducts = async (event) => {
+    event.preventDefault();
+    const { search } = this.state;
+    const products = await getProductsFromCategoryAndQuery(null, search);
+    console.log(products.results);
+    this.setState(({
+      products: products.results,
+      search: '',
+    }));
+  };
+
   handleClick = () => {
     const { history } = this.props;
     history.push('/cart');
   };
 
   render() {
+    const { search, products } = this.state;
     return (
       <div className="App">
-        <input type="text" />
+        <input
+          type="text"
+          value={ search }
+          onChange={ this.handleChange }
+          data-testid="query-input"
+        />
+        <button
+          type="button"
+          onClick={ this.searchProducts }
+          data-testid="query-button"
+        >
+          Pesquisar
+        </button>
         <button
           type="button"
           data-testid="shopping-cart-button"
@@ -23,6 +60,16 @@ class Home extends Component {
         >
           Digite algum termo de pesquisa ou escolha uma categoria.
         </h3>
+        {
+          products.length > 0 ? products.map(({ title, price, thumbnail, id }) => (
+            <div data-testid="product" key={ id }>
+              <h3>{ title }</h3>
+              <img src={ thumbnail } alt={ title } />
+              <p>{ price }</p>
+            </div>
+          ))
+            : <p>Nenhum produto foi encontrado</p>
+        }
       </div>
     );
   }
