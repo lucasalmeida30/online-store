@@ -43,6 +43,17 @@ class Home extends Component {
     });
   };
 
+  productAddToCart = (idProduct) => {
+    const { products } = this.state;
+    const test = products.find(({ id }) => id === idProduct);
+    const itemsLocalStotage = localStorage.getItem('cart');
+    const objectItems = itemsLocalStotage && JSON.parse(itemsLocalStotage);
+    if (objectItems) {
+      objectItems.push(test);
+      localStorage.setItem('cart', JSON.stringify(b));
+    } else localStorage.setItem('cart', JSON.stringify([test]));
+  };
+
   render() {
     const { search, products, categories } = this.state;
     return (
@@ -91,13 +102,21 @@ class Home extends Component {
           Digite algum termo de pesquisa ou escolha uma categoria.
         </h3>
         {
-          products.length > 0 ? products.map(({ title, price, thumbnail, id }) => (
-            <div data-testid="product" key={ id }>
-              <h3>{ title }</h3>
-              <img src={ thumbnail } alt={ title } />
-              <p>{ price }</p>
-            </div>
-          ))
+          products.length > 0
+            ? products.map(({ title, price, thumbnail, id }) => (
+              <div data-testid="product" key={ id }>
+                <h3>{ title }</h3>
+                <img src={ thumbnail } alt={ title } />
+                <p>{ price }</p>
+                <button
+                  data-testid="product-add-to-cart"
+                  type="button"
+                  onClick={ () => this.productAddToCart(id) }
+                >
+                  Adicionar ao carrinho
+                </button>
+              </div>
+            ))
             : <p>Nenhum produto foi encontrado</p>
         }
       </div>
