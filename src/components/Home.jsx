@@ -1,6 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getProductsFromCategoryAndQuery } from '../services/api';
+import { getProductsFromCategoryAndQuery, getCategories } from '../services/api';
 
 class Home extends Component {
   state = {
@@ -8,12 +8,12 @@ class Home extends Component {
     products: [],
     categories: [],
   };
-  
+
   async componentDidMount() {
     const categories = await getCategories();
     this.setState({ categories });
   }
-  
+
   handleChange = ({ target }) => {
     const { value } = target;
     this.setState(({
@@ -40,7 +40,7 @@ class Home extends Component {
     const { search, products, categories } = this.state;
     return (
       <div className="App">
-      {
+        {
           categories.map((category) => (
             <label
               htmlFor="categorieRadioButton"
