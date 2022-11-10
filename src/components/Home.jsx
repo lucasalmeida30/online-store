@@ -6,8 +6,14 @@ class Home extends Component {
   state = {
     search: '',
     products: [],
+    categories: [],
   };
-
+  
+  async componentDidMount() {
+    const categories = await getCategories();
+    this.setState({ categories });
+  }
+  
   handleChange = ({ target }) => {
     const { value } = target;
     this.setState(({
@@ -31,9 +37,25 @@ class Home extends Component {
   };
 
   render() {
-    const { search, products } = this.state;
+    const { search, products, categories } = this.state;
     return (
       <div className="App">
+      {
+          categories.map((category) => (
+            <label
+              htmlFor="categorieRadioButton"
+              key={ category.id }
+              data-testid="category"
+            >
+              <input
+                type="radio"
+                name="button"
+                id="categorieRadioButton"
+              />
+              { category.name }
+            </label>
+          ))
+        }
         <input
           type="text"
           value={ search }
@@ -47,6 +69,7 @@ class Home extends Component {
         >
           Pesquisar
         </button>
+
         <button
           type="button"
           data-testid="shopping-cart-button"
