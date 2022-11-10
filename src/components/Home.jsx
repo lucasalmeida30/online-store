@@ -62,14 +62,14 @@ class Home extends Component {
         {
           categories.map((category) => (
             <label
-              htmlFor="categoryRadioButton"
+              htmlFor={ `${category.name}-radio-button` }
               key={ category.id }
               data-testid="category"
             >
               <input
                 type="radio"
-                name="button"
-                id="categoryRadioButton"
+                name="category-radio-button"
+                id={ `${category.name}-radio-button` }
                 onClick={ () => this.filterCategory(category.id) }
               />
               { category.name }
