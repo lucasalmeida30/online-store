@@ -46,13 +46,13 @@ class Home extends Component {
 
   productAddToCart = (idProduct) => {
     const { products } = this.state;
-    const test = products.find(({ id }) => id === idProduct);
+    const product = products.find(({ id }) => id === idProduct);
     const itemsLocalStotage = localStorage.getItem('cart');
     const objectItems = itemsLocalStotage && JSON.parse(itemsLocalStotage);
     if (objectItems) {
-      objectItems.push(test);
-      localStorage.setItem('cart', JSON.stringify(b));
-    } else localStorage.setItem('cart', JSON.stringify([test]));
+      objectItems.push(product);
+      localStorage.setItem('cart', JSON.stringify(objectItems));
+    } else localStorage.setItem('cart', JSON.stringify([product]));
   };
 
   render() {
@@ -104,9 +104,8 @@ class Home extends Component {
         </h3>
         {
           products.length > 0 ? products.map(({ title, price, thumbnail, id }) => (
-            <>
+            <div key={ id }>
               <Link
-                key={ id }
                 data-testid="product-detail-link"
                 to={ `/product/${id}` }
               >
@@ -126,7 +125,7 @@ class Home extends Component {
               >
                 Adicionar ao carrinho
               </button>
-            </>
+            </div>
           ))
             : <p>Nenhum produto foi encontrado</p>
         }
