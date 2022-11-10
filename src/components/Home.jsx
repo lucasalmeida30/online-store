@@ -1,19 +1,20 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
-import { getProductsFromCategoryAndQuery } from '../services/api';
+import { getProductsFromCategoryAndQuery, getCategories } from '../services/api';
 
 class Home extends Component {
   state = {
     search: '',
     products: [],
     categories: [],
+    category: '',
   };
-  
+
   async componentDidMount() {
     const categories = await getCategories();
     this.setState({ categories });
   }
-  
+
   handleChange = ({ target }) => {
     const { value } = target;
     this.setState(({
@@ -21,13 +22,13 @@ class Home extends Component {
     }));
   };
 
-  searchProducts = async (event) => {
-    event.preventDefault();
-    const { search } = this.state;
-    const products = await getProductsFromCategoryAndQuery(null, search);
+  searchProducts = async () => {
+    const { search, category } = this.state;
+    const products = await getProductsFromCategoryAndQuery(category, search);
     this.setState(({
       products: products.results,
       search: '',
+      category: '',
     }));
   };
 
@@ -36,21 +37,28 @@ class Home extends Component {
     history.push('/cart');
   };
 
+  filterCategory = async (category) => {
+    this.setState({ category, search: '' }, () => {
+      this.searchProducts();
+    });
+  };
+
   render() {
     const { search, products, categories } = this.state;
     return (
       <div className="App">
-      {
+        {
           categories.map((category) => (
             <label
-              htmlFor="categorieRadioButton"
+              htmlFor="categoryRadioButton"
               key={ category.id }
               data-testid="category"
             >
               <input
                 type="radio"
                 name="button"
-                id="categorieRadioButton"
+                id="categoryRadioButton"
+                onClick={ () => this.filterCategory(category.id) }
               />
               { category.name }
             </label>
