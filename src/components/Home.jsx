@@ -38,7 +38,7 @@ class Home extends Component {
   };
 
   filterCategory = async (category) => {
-    this.setState({ category, search: '', }, () => {
+    this.setState({ category, search: '' }, () => {
       this.searchProducts();
     });
   };
