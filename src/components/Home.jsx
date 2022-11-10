@@ -104,27 +104,29 @@ class Home extends Component {
         </h3>
         {
           products.length > 0 ? products.map(({ title, price, thumbnail, id }) => (
-            <Link
-              key={ id }
-              data-testid="product-detail-link"
-              to={ `/product/${id}` }
-            >
-              <div
-                data-testid="product"
+            <>
+              <Link
+                key={ id }
+                data-testid="product-detail-link"
+                to={ `/product/${id}` }
               >
-                <h3>{ title }</h3>
-                <img src={ thumbnail } alt={ title } />
-                <p>{ price }</p>
-                <p>{ id }</p>
-                 <button
-                  data-testid="product-add-to-cart"
-                  type="button"
-                  onClick={ () => this.productAddToCart(id) }
+                <div
+                  data-testid="product"
                 >
-                  Adicionar ao carrinho
-                </button>
-              </div>
-            </Link>
+                  <h3>{ title }</h3>
+                  <img src={ thumbnail } alt={ title } />
+                  <p>{ price }</p>
+                  <p>{ id }</p>
+                </div>
+              </Link>
+              <button
+                data-testid="product-add-to-cart"
+                type="button"
+                onClick={ () => this.productAddToCart(id) }
+              >
+                Adicionar ao carrinho
+              </button>
+            </>
           ))
             : <p>Nenhum produto foi encontrado</p>
         }

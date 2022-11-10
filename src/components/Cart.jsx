@@ -2,8 +2,9 @@ import React, { Component } from 'react';
 
 class Cart extends Component {
   render() {
+    let items = [];
     const getItems = localStorage.getItem('cart');
-    const items = JSON.parse(getItems);
+    if (getItems) items = getItems && JSON.parse(getItems);
 
     return (
       <div>
