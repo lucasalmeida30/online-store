@@ -7,6 +7,7 @@ class Home extends Component {
     search: '',
     products: [],
     categories: [],
+    category: '',
   };
 
   async componentDidMount() {
@@ -21,19 +22,25 @@ class Home extends Component {
     }));
   };
 
-  searchProducts = async (event) => {
-    event.preventDefault();
-    const { search } = this.state;
-    const products = await getProductsFromCategoryAndQuery(null, search);
+  searchProducts = async () => {
+    const { search, category } = this.state;
+    const products = await getProductsFromCategoryAndQuery(category, search);
     this.setState(({
       products: products.results,
       search: '',
+      category: '',
     }));
   };
 
   handleClick = () => {
     const { history } = this.props;
     history.push('/cart');
+  };
+
+  filterCategory = async (category) => {
+    this.setState({ category, search: '' }, () => {
+      this.searchProducts();
+    });
   };
 
   render() {
@@ -43,14 +50,15 @@ class Home extends Component {
         {
           categories.map((category) => (
             <label
-              htmlFor="categorieRadioButton"
+              htmlFor="categoryRadioButton"
               key={ category.id }
               data-testid="category"
             >
               <input
                 type="radio"
                 name="button"
-                id="categorieRadioButton"
+                id="categoryRadioButton"
+                onClick={ () => this.filterCategory(category.id) }
               />
               { category.name }
             </label>
