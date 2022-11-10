@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { getProductsFromCategoryAndQuery, getCategories } from '../services/api';
 
 class Home extends Component {
@@ -92,11 +93,20 @@ class Home extends Component {
         </h3>
         {
           products.length > 0 ? products.map(({ title, price, thumbnail, id }) => (
-            <div data-testid="product" key={ id }>
-              <h3>{ title }</h3>
-              <img src={ thumbnail } alt={ title } />
-              <p>{ price }</p>
-            </div>
+            <Link
+              key={ id }
+              data-testid="product-detail-link"
+              to={ `/product/${id}` }
+            >
+              <div
+                data-testid="product"
+              >
+                <h3>{ title }</h3>
+                <img src={ thumbnail } alt={ title } />
+                <p>{ price }</p>
+                <p>{ id }</p>
+              </div>
+            </Link>
           ))
             : <p>Nenhum produto foi encontrado</p>
         }
