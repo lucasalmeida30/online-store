@@ -24,8 +24,20 @@ class Product extends Component {
     history.push('/cart');
   };
 
+  addToCart = () => {
+    const { product } = this.state;
+    const cartItems = localStorage.getItem('cart');
+
+    if (cartItems) {
+      const cartItemsArray = JSON.parse(cartItems);
+      cartItemsArray.push(product);
+      localStorage.setItem('cart', JSON.stringify(cartItemsArray));
+    } else localStorage.setItem('cart', JSON.stringify([product]));
+  };
+
   render() {
     const { product, loading } = this.state;
+
     return (
       <div>
         <h3 data-testid="product-detail-name">{ product.title }</h3>
@@ -35,6 +47,13 @@ class Product extends Component {
           data-testid="product-detail-image"
         />
         <h5 data-testid="product-detail-price">{ product.price }</h5>
+        <button
+          type="button"
+          onClick={ this.addToCart }
+          data-testid="product-detail-add-to-cart"
+        >
+          Adicionar ao carrinho
+        </button>
         <button
           type="button"
           onClick={ this.handleClick }
