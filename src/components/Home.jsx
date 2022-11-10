@@ -44,6 +44,17 @@ class Home extends Component {
     });
   };
 
+  productAddToCart = (idProduct) => {
+    const { products } = this.state;
+    const test = products.find(({ id }) => id === idProduct);
+    const itemsLocalStotage = localStorage.getItem('cart');
+    const objectItems = itemsLocalStotage && JSON.parse(itemsLocalStotage);
+    if (objectItems) {
+      objectItems.push(test);
+      localStorage.setItem('cart', JSON.stringify(b));
+    } else localStorage.setItem('cart', JSON.stringify([test]));
+  };
+
   render() {
     const { search, products, categories } = this.state;
     return (
@@ -105,6 +116,13 @@ class Home extends Component {
                 <img src={ thumbnail } alt={ title } />
                 <p>{ price }</p>
                 <p>{ id }</p>
+                 <button
+                  data-testid="product-add-to-cart"
+                  type="button"
+                  onClick={ () => this.productAddToCart(id) }
+                >
+                  Adicionar ao carrinho
+                </button>
               </div>
             </Link>
           ))
