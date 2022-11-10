@@ -1,5 +1,6 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
+import { Link } from 'react-router-dom';
 import { getProductsFromCategoryAndQuery, getCategories } from '../services/api';
 
 class Home extends Component {
@@ -102,13 +103,20 @@ class Home extends Component {
           Digite algum termo de pesquisa ou escolha uma categoria.
         </h3>
         {
-          products.length > 0
-            ? products.map(({ title, price, thumbnail, id }) => (
-              <div data-testid="product" key={ id }>
+          products.length > 0 ? products.map(({ title, price, thumbnail, id }) => (
+            <Link
+              key={ id }
+              data-testid="product-detail-link"
+              to={ `/product/${id}` }
+            >
+              <div
+                data-testid="product"
+              >
                 <h3>{ title }</h3>
                 <img src={ thumbnail } alt={ title } />
                 <p>{ price }</p>
-                <button
+                <p>{ id }</p>
+                 <button
                   data-testid="product-add-to-cart"
                   type="button"
                   onClick={ () => this.productAddToCart(id) }
@@ -116,7 +124,8 @@ class Home extends Component {
                   Adicionar ao carrinho
                 </button>
               </div>
-            ))
+            </Link>
+          ))
             : <p>Nenhum produto foi encontrado</p>
         }
       </div>
