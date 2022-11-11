@@ -1,11 +1,14 @@
 import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { getProductById } from '../services/api';
+import AddToCartButton from './AddToCartButton';
+import CartButton from './CartButton';
 
 class Product extends Component {
   state = {
     product: [],
     loading: false,
+    numberOfItems: 0,
   };
 
   async componentDidMount() {
@@ -13,10 +16,14 @@ class Product extends Component {
     const { params } = match;
     const { id } = params;
     const data = await getProductById(id);
+
     this.setState({
       product: data,
       loading: true,
     });
+
+    const numberOfItems = localStorage.getItem('numberOfItems');
+    if (numberOfItems) this.setState({ numberOfItems });
   }
 
   handleClick = () => {
@@ -33,10 +40,12 @@ class Product extends Component {
       cartItemsArray.push(product);
       localStorage.setItem('cart', JSON.stringify(cartItemsArray));
     } else localStorage.setItem('cart', JSON.stringify([product]));
+
+    this.setState((prevState) => ({ numberOfItems: prevState.numberOfItems + 1 }));
   };
 
   render() {
-    const { product, loading } = this.state;
+    const { product, loading, numberOfItems } = this.state;
 
     return (
       <div>
@@ -47,20 +56,14 @@ class Product extends Component {
           data-testid="product-detail-image"
         />
         <h5 data-testid="product-detail-price">{ product.price }</h5>
-        <button
-          type="button"
-          onClick={ this.addToCart }
-          data-testid="product-detail-add-to-cart"
-        >
-          Adicionar ao carrinho
-        </button>
-        <button
-          type="button"
-          onClick={ this.handleClick }
-          data-testid="shopping-cart-button"
-        >
-          Carrinho
-        </button>
+        <AddToCartButton
+          productAddToCart={ this.addToCart }
+          dataTestId="product-detail-add-to-cart"
+        />
+        <CartButton
+          key={ numberOfItems }
+          handleClick={ this.handleClick }
+        />
         { loading && product.attributes.map((atribute) => (
           <p key={ atribute.id }>{ `${atribute.name}: ${atribute.value_name}` }</p>
         )) }
