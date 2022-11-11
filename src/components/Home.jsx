@@ -2,6 +2,8 @@ import React, { Component } from 'react';
 import PropTypes from 'prop-types';
 import { Link } from 'react-router-dom';
 import { getProductsFromCategoryAndQuery, getCategories } from '../services/api';
+import AddToCartButton from './AddToCartButton';
+import CartButton from './CartButton';
 
 class Home extends Component {
   state = {
@@ -9,11 +11,14 @@ class Home extends Component {
     products: [],
     categories: [],
     category: '',
+    numberOfItems: 0,
   };
 
   async componentDidMount() {
     const categories = await getCategories();
     this.setState({ categories });
+    const numberOfItems = localStorage.getItem('numberOfItems');
+    if (numberOfItems) this.setState({ numberOfItems });
   }
 
   handleChange = ({ target }) => {
@@ -49,14 +54,17 @@ class Home extends Component {
     const product = products.find(({ id }) => id === idProduct);
     const itemsLocalStotage = localStorage.getItem('cart');
     const objectItems = itemsLocalStotage && JSON.parse(itemsLocalStotage);
+
     if (objectItems) {
       objectItems.push(product);
       localStorage.setItem('cart', JSON.stringify(objectItems));
     } else localStorage.setItem('cart', JSON.stringify([product]));
+
+    this.setState((prevState) => ({ numberOfItems: prevState.numberOfItems + 1 }));
   };
 
   render() {
-    const { search, products, categories } = this.state;
+    const { search, products, categories, numberOfItems } = this.state;
     return (
       <div className="App">
         {
@@ -89,14 +97,10 @@ class Home extends Component {
         >
           Pesquisar
         </button>
-
-        <button
-          type="button"
-          data-testid="shopping-cart-button"
-          onClick={ this.handleClick }
-        >
-          Carrinho
-        </button>
+        <CartButton
+          key={ numberOfItems }
+          handleClick={ this.handleClick }
+        />
         <h3
           data-testid="home-initial-message"
         >
@@ -118,13 +122,10 @@ class Home extends Component {
                   <p>{ id }</p>
                 </div>
               </Link>
-              <button
-                data-testid="product-add-to-cart"
-                type="button"
-                onClick={ () => this.productAddToCart(id) }
-              >
-                Adicionar ao carrinho
-              </button>
+              <AddToCartButton
+                productAddToCart={ () => this.productAddToCart(id) }
+                dataTestId="product-add-to-cart"
+              />
             </div>
           ))
             : <p>Nenhum produto foi encontrado</p>
