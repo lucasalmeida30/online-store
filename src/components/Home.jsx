@@ -26,6 +26,7 @@ class Home extends Component {
   searchProducts = async () => {
     const { search, category } = this.state;
     const products = await getProductsFromCategoryAndQuery(category, search);
+    console.log(products);
     this.setState(({
       products: products.results,
       search: '',
@@ -103,30 +104,41 @@ class Home extends Component {
           Digite algum termo de pesquisa ou escolha uma categoria.
         </h3>
         {
-          products.length > 0 ? products.map(({ title, price, thumbnail, id }) => (
-            <div key={ id }>
-              <Link
-                data-testid="product-detail-link"
-                to={ `/product/${id}` }
-              >
-                <div
-                  data-testid="product"
+          products.length > 0
+            ? products.map(({ title, price, thumbnail, id, shipping }) => (
+              <div key={ id }>
+                <Link
+                  data-testid="product-detail-link"
+                  to={ `/product/${id}` }
                 >
-                  <h3>{ title }</h3>
-                  <img src={ thumbnail } alt={ title } />
-                  <p>{ price }</p>
-                  <p>{ id }</p>
+                  <div
+                    data-testid="product"
+                  >
+                    <h3>{ title }</h3>
+                    <img src={ thumbnail } alt={ title } />
+                    <p>{ price }</p>
+                    <p>{ id }</p>
+                  </div>
+                </Link>
+                <div>
+                  {
+                    shipping.free_shipping && (
+                      <p
+                        data-testid="free-shipping"
+                      >
+                        Frete Grátis
+                      </p>)
+                  }
                 </div>
-              </Link>
-              <button
-                data-testid="product-add-to-cart"
-                type="button"
-                onClick={ () => this.productAddToCart(id) }
-              >
-                Adicionar ao carrinho
-              </button>
-            </div>
-          ))
+                <button
+                  data-testid="product-add-to-cart"
+                  type="button"
+                  onClick={ () => this.productAddToCart(id) }
+                >
+                  Adicionar ao carrinho
+                </button>
+              </div>
+            ))
             : <p>Nenhum produto foi encontrado</p>
         }
       </div>
