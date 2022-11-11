@@ -1,6 +1,12 @@
 import React, { Component } from 'react';
+import PropTypes from 'prop-types';
 
 class Cart extends Component {
+  handleClick = () => {
+    const { history } = this.props;
+    history.push('/checkout');
+  };
+
   render() {
     let items = [];
     const getItems = localStorage.getItem('cart');
@@ -19,9 +25,20 @@ class Cart extends Component {
             : <h1 data-testid="shopping-cart-empty-message">Seu carrinho está vazio</h1>
         }
         <p data-testid="shopping-cart-product-quantity">{ items.length }</p>
+        <button
+          type="button"
+          data-testid="checkout-products"
+          onClick={ this.handleClick }
+        >
+          Checkout
+        </button>
       </div>
     );
   }
 }
+
+Cart.propTypes = {
+  history: PropTypes.string,
+}.isRequired;
 
 export default Cart;
